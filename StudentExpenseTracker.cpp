@@ -5,207 +5,197 @@
 #include <sstream>
 #include <string>
 #include <vector>
+using namespace std;
 
 struct Expense {
     int id;
     double amount;
-    std::string category;
-    std::string description;
-    std::string date;
+    string category;
+    string description;
+    string date;
 };
 
-std::string toLower(std::string text) {
-    for (char& c : text) {
-        c = static_cast<char>(
-            std::tolower(static_cast<unsigned char>(c))
-        );
+string toLower(string text) {
+    for (int i = 0; i < text.length(); i++) {
+        text[i] = tolower(text[i]);
     }
-
     return text;
 }
 
-void addExpense(std::vector<Expense>& expenses) {
+void addExpense(vector<Expense>& expenses) {
     Expense expense;
 
-    expense.id = expenses.empty()
-        ? 1
-        : expenses.back().id + 1;
+    if (expenses.empty())
+        expense.id = 1;
+    else
+        expense.id = expenses.back().id + 1;
 
-    std::cout << "\n===== ADD EXPENSE =====\n";
+    cout << "\n ADD EXPENSE \n";
 
-    std::cout << "Amount: ";
-    std::cin >> expense.amount;
+    cout << "Amount: ";
+    cin >> expense.amount;
+    cin.ignore();
 
-    std::cin.ignore();
+    cout << "Category: ";
+    getline(cin, expense.category);
 
-    std::cout << "Category: ";
-    std::getline(std::cin, expense.category);
+    cout << "Description: ";
+    getline(cin, expense.description);
 
-    std::cout << "Description: ";
-    std::getline(std::cin, expense.description);
-
-    std::cout << "Date: ";
-    std::getline(std::cin, expense.date);
+    cout << "Date: ";
+    getline(cin, expense.date);
 
     expenses.push_back(expense);
 
-    std::cout << "\nExpense added successfully!\n";
+    cout << "\nExpense added successfully!\n";
 }
 
-void viewExpenses(const std::vector<Expense>& expenses) {
-    std::cout << "\n===== EXPENSES =====\n";
+void viewExpenses(vector<Expense>& expenses) {
+    cout << "\n EXPENSES \n";
 
     if (expenses.empty()) {
-        std::cout << "No expenses found.\n";
+        cout << "No expenses found.\n";
         return;
     }
 
-    for (const Expense& expense : expenses) {
-        std::cout << "\nID: " << expense.id << '\n';
-        std::cout << "Amount: " << expense.amount << " VND\n";
-        std::cout << "Category: " << expense.category << '\n';
-        std::cout << "Description: " << expense.description << '\n';
-        std::cout << "Date: " << expense.date << '\n';
-        std::cout << "-----------------------------\n";
+    for (int i = 0; i < expenses.size(); i++) {
+        cout << "\nID: " << expenses[i].id << '\n';
+        cout << "Amount: " << expenses[i].amount << " VND\n";
+        cout << "Category: " << expenses[i].category << '\n';
+        cout << "Description: " << expenses[i].description << '\n';
+        cout << "Date: " << expenses[i].date << '\n';
+        cout << "-----------------------------\n";
     }
 }
 
-void searchExpense(const std::vector<Expense>& expenses) {
+void searchExpense(vector<Expense>& expenses) {
     if (expenses.empty()) {
-        std::cout << "\nNo expenses found.\n";
+        cout << "\nNo expenses found.\n";
         return;
     }
 
-    std::cin.ignore();
+    cin.ignore();
 
-    std::string keyword;
+    string keyword;
 
-    std::cout << "\n===== SEARCH EXPENSE =====\n";
-    std::cout << "Enter category or description: ";
-    std::getline(std::cin, keyword);
+    cout << "\n SEARCH EXPENSE \n";
+    cout << "Enter category or description: ";
+    getline(cin, keyword);
 
     keyword = toLower(keyword);
 
-    bool found = false;
+    bool found = 0;
 
-    for (const Expense& expense : expenses) {
-        std::string category = toLower(expense.category);
-        std::string description = toLower(expense.description);
+    for (int i = 0; i < expenses.size(); i++) {
+        string category = toLower(expenses[i].category);
+        string description = toLower(expenses[i].description);
 
-        if (category.find(keyword) != std::string::npos ||
-            description.find(keyword) != std::string::npos) {
+        if (category.find(keyword) != string::npos ||
+            description.find(keyword) != string::npos) {
 
-            std::cout << "\nID: " << expense.id << '\n';
-            std::cout << "Amount: " << expense.amount << " VND\n";
-            std::cout << "Category: " << expense.category << '\n';
-            std::cout << "Description: " << expense.description << '\n';
-            std::cout << "Date: " << expense.date << '\n';
-            std::cout << "-----------------------------\n";
+            cout << "\nID: " << expenses[i].id << '\n';
+            cout << "Amount: " << expenses[i].amount << " VND\n";
+            cout << "Category: " << expenses[i].category << '\n';
+            cout << "Description: " << expenses[i].description << '\n';
+            cout << "Date: " << expenses[i].date << '\n';
+            cout << "-----------------------------\n";
 
-            found = true;
+            found = 1;
         }
     }
 
-    if (!found) {
-        std::cout << "\nNo matching expense found.\n";
-    }
+    if (!found)
+        cout << "\nNo matching expense found.\n";
 }
 
-double calculateTotal(const std::vector<Expense>& expenses) {
+double calculateTotal(vector<Expense>& expenses) {
     double total = 0;
 
-    for (const Expense& expense : expenses) {
-        total += expense.amount;
-    }
+    for (int i = 0; i < expenses.size(); i++)
+        total += expenses[i].amount;
 
     return total;
 }
 
-void showStatistics(const std::vector<Expense>& expenses) {
+void showStatistics(vector<Expense>& expenses) {
     if (expenses.empty()) {
-        std::cout << "\nNo expenses found.\n";
+        cout << "\nNo expenses found.\n";
         return;
     }
 
-    std::map<std::string, double> statistics;
+    map<string, double> statistics;
 
-    for (const Expense& expense : expenses) {
-        statistics[expense.category] += expense.amount;
-    }
+    for (int i = 0; i < expenses.size(); i++)
+        statistics[expenses[i].category] += expenses[i].amount;
 
-    std::cout << "\n===== CATEGORY STATISTICS =====\n";
+    cout << "\n CATEGORY STATISTICS \n";
 
-    for (const auto& item : statistics) {
-        std::cout << item.first
-                  << " : "
-                  << item.second
-                  << " VND\n";
+    for (map<string, double>::iterator it = statistics.begin();
+         it != statistics.end();
+         it++) {
+
+        cout << it->first << " : "
+             << it->second << " VND\n";
     }
 }
 
-void saveExpenses(const std::vector<Expense>& expenses) {
-    std::ofstream file("data/expenses.txt");
+void saveExpenses(vector<Expense>& expenses) {
+    ofstream file("data/expenses.txt");
 
-    if (!file) {
-        std::cout << "Cannot open file for saving.\n";
-        return;
-    }
-
-    for (const Expense& expense : expenses) {
-        file << expense.id << '|'
-             << expense.amount << '|'
-             << expense.category << '|'
-             << expense.description << '|'
-             << expense.date << '\n';
+    for (int i = 0; i < expenses.size(); i++) {
+        file << expenses[i].id << '|'
+             << expenses[i].amount << '|'
+             << expenses[i].category << '|'
+             << expenses[i].description << '|'
+             << expenses[i].date << '\n';
     }
 }
 
-void loadExpenses(std::vector<Expense>& expenses) {
-    std::ifstream file("data/expenses.txt");
+void loadExpenses(vector<Expense>& expenses) {
+    ifstream file("data/expenses.txt");
 
-    if (!file) {
+    if (!file)
         return;
-    }
 
-    std::string line;
+    string line;
 
-    while (std::getline(file, line)) {
-        std::stringstream ss(line);
+    while (getline(file, line)) {
+        stringstream ss(line);
 
         Expense expense;
-        std::string value;
+        string value;
 
-        std::getline(ss, value, '|');
-        expense.id = std::stoi(value);
+        getline(ss, value, '|');
+        expense.id = stoi(value);
 
-        std::getline(ss, value, '|');
-        expense.amount = std::stod(value);
+        getline(ss, value, '|');
+        expense.amount = stod(value);
 
-        std::getline(ss, expense.category, '|');
-        std::getline(ss, expense.description, '|');
-        std::getline(ss, expense.date);
+        getline(ss, expense.category, '|');
+        getline(ss, expense.description, '|');
+        getline(ss, expense.date);
 
         expenses.push_back(expense);
     }
 }
 
 void showMenu() {
-    std::cout << "\n====================================\n";
-    std::cout << "       STUDENT EXPENSE TRACKER\n";
-    std::cout << "====================================\n";
+    cout << "\n====================================\n";
+    cout << "       STUDENT EXPENSE TRACKER\n";
+    cout << "====================================\n";
 
-    std::cout << "1. Add expense\n";
-    std::cout << "2. View expenses\n";
-    std::cout << "3. Search expense\n";
-    std::cout << "4. Total spending\n";
-    std::cout << "5. Category statistics\n";
-    std::cout << "6. Exit\n";
+    cout << "1. Add expense\n";
+    cout << "2. View expenses\n";
+    cout << "3. Search expense\n";
+    cout << "4. Total spending\n";
+    cout << "5. Category statistics\n";
+    cout << "6. Exit\n";
 
-    std::cout << "\nChoose: ";
+    cout << "\nChoose: ";
 }
 
 int main() {
-    std::vector<Expense> expenses;
+    vector<Expense> expenses;
 
     loadExpenses(expenses);
 
@@ -214,7 +204,7 @@ int main() {
     do {
         showMenu();
 
-        std::cin >> choice;
+        cin >> choice;
 
         switch (choice) {
             case 1:
@@ -231,9 +221,9 @@ int main() {
                 break;
 
             case 4:
-                std::cout << "\nTotal spending: "
-                          << calculateTotal(expenses)
-                          << " VND\n";
+                cout << "\nTotal spending: "
+                     << calculateTotal(expenses)
+                     << " VND\n";
                 break;
 
             case 5:
@@ -241,15 +231,15 @@ int main() {
                 break;
 
             case 6:
-                saveExpenses(expenses);
-                std::cout << "\nGoodbye!\n";
+                cout << "\nGoodbye!\n";
                 break;
 
             default:
-                std::cout << "\nInvalid choice!\n";
+                cout << "\nInvalid choice!\n";
         }
 
-    } while (choice != 6);
+    } 
+    while (choice != 6);
 
     return 0;
 }
